@@ -4,12 +4,15 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        File file = new File("input.txt");
-        String[] expression = input.nextLine().split(" +");
-        input.close();
+
+
         try {
+            File file = new File("input.txt");
+            file.createNewFile();
             FileReader reader = new FileReader(file);
+            Scanner input = new Scanner(reader);
+            String[] expression = input.nextLine().split(" +");
+            input.close();
             double numberOne = Double.parseDouble(expression[0]);
             double numberTwo = Double.parseDouble(expression[2]);
             if (expression[1].length() > 1) {
