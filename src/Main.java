@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Scanner;
 
 public class Main {
@@ -9,10 +10,13 @@ public class Main {
         try {
             File file = new File("input.txt");
             file.createNewFile();
+            File file2 = new File("output.txt");
+            file2.createNewFile();
             FileReader reader = new FileReader(file);
             Scanner input = new Scanner(reader);
             String[] expression = input.nextLine().split(" +");
             input.close();
+            reader.close();
             double numberOne = Double.parseDouble(expression[0]);
             double numberTwo = Double.parseDouble(expression[2]);
             if (expression[1].length() > 1) {
@@ -39,8 +43,10 @@ public class Main {
                 default:
                     throw new Exception("Operation Error!");
             }
-            System.out.println(result);
-
+            // System.out.println(result);
+            FileWriter fileWriter = new FileWriter(file2);
+            fileWriter.write(String.valueOf(result));
+            fileWriter.close();
         } catch (NumberFormatException num) {
             System.out.println("Error! Not number");
         } catch (Exception operation) {
