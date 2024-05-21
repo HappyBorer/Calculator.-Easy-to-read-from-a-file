@@ -1,50 +1,85 @@
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        File file = new File("input.txt");
+        File outFile = new File("output.txt");
+        BufferedReader br = null;
 
-
+        String result = "";
         try {
-            File file = new File("input.txt");
-            file.createNewFile();
-            FileReader reader = new FileReader(file);
-            Scanner input = new Scanner(reader);
-            String[] expression = input.nextLine().split(" +");
-            input.close();
-            double numberOne = Double.parseDouble(expression[0]);
-            double numberTwo = Double.parseDouble(expression[2]);
-            if (expression[1].length() > 1) {
-                throw new Exception("Operation Error!");
-            }
-            char sign = expression[1].charAt(0);
-            double result;
-            switch (sign) {
-                case '+':
-                    result = numberOne + numberTwo;
-                    break;
-                case '-':
-                    result = numberOne - numberTwo;
-                    break;
-                case '/':
-                    if (numberTwo == 0) {
-                        throw new Exception("Error! Division by zero");
-                    }
-                    result = numberOne / numberTwo;
-                    break;
-                case '*':
-                    result = numberOne * numberTwo;
-                    break;
-                default:
-                    throw new Exception("Operation Error!");
-            }
-            System.out.println(result);
 
-        } catch (NumberFormatException num) {
-            System.out.println("Error! Not number");
-        } catch (Exception operation) {
-            System.out.println(operation.getMessage());
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+            if(!outFile.exists()) {
+                outFile.createNewFile();
+            }
+            FileReader reader = new FileReader(file);
+            br = new BufferedReader(reader);
+            FileWriter writer = new FileWriter(outFile);
+
+            double numberOne;
+            double numberTwo;
+            while (br.ready()) {
+                String tmp = br.readLine();
+                String[] expression = tmp.split(" +");
+
+                result += tmp + " = ";
+
+                try {
+                    numberOne = Double.parseDouble(expression[0]);
+                    numberTwo = Double.parseDouble(expression[2]);
+                } catch (NumberFormatException num){
+                    result += "Error! Not number\n";
+                    continue;
+                }
+
+
+                if (expression[1].length() > 1) {
+                    result += "Operation Error!\n";
+                } else {
+
+                    char sign = expression[1].charAt(0);
+                    switch (sign) {
+                        case '+':
+                            result += (numberOne + numberTwo) + "\n";
+                            break;
+                        case '-':
+                            result += (numberOne - numberTwo) + "\n";
+                            break;
+                        case '/':
+                            if (numberTwo == 0) {
+                                result +=  "Error! Division by zero\n";
+
+                            } else {
+                                result += (numberOne / numberTwo) + "\n";
+                            }
+                            break;
+                        case '*':
+                            result += (numberOne * numberTwo) + "\n";
+                            break;
+                        default:
+                            result += "Operation Error!\n";
+
+                    }
+
+                }
+            }
+            writer.write(result);
+            reader.close();
+            writer.close();
+
+        } catch (IOException ex){
+            ex.getStackTrace();
+        } finally {
+            try {
+                br.close();
+            }catch (IOException ex){
+                ex.getStackTrace();
+            }
         }
     }
 }
